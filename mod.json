@@ -1,10 +1,10 @@
 {
-	"name": "Wayward Mod Learnings",
-	"description": "Where I learn to make a wayward mod.",
-	"version": "0.0.1",
+	"allowUnlockingMilestones": true,
 	"author": "Jeremy Osborne <jeremywosborne@gmail.com>",
+	"description": "Where I learn to make a wayward mod.",
 	"file": "out/Mod",
-	"waywardVersion": "2.9.6-beta",
-
-	"allowUnlockingMilestones": true
+	"name": "Wayward Mod Learnings",
+  "unloadable": true,
+	"version": "0.0.1",
+	"waywardVersion": "2.9.6-beta"
 }
