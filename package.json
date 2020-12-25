@@ -1,0 +1,18 @@
+{
+  "name": "wayward-mod-hello-world",
+  "version": "0.0.1",
+  "description": "Practice wayward mod",
+  "main": "index.js",
+  "devDependencies": {
+    "@typescript-eslint/parser": "^4.11.0",
+    "@wayward/types": "^2.9.6-beta",
+    "eslint": "^7.16.0",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "typescript": "^4.1.3"
+  },
+  "author": "Jeremy Osborne <jeremywosborne@gmail.com>",
+  "license": "ISC"
+}
