@@ -4,6 +4,7 @@
   "rules": {
     "comma-dangle": ["error", "only-multiline"],
     "object-curly-spacing": ["error", "never"],
+    "no-undef": ["off"], // rely on TypeScript compiler to catch errors, not eslint.
     "quotes": ["error", "double", { "avoidEscape": true }],
     "yoda": ["off"]
   }
