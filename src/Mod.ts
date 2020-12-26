@@ -4,36 +4,34 @@ import {HookMethod} from "mod/IHookHost"
 import Mod from "mod/Mod"
 import Register from "mod/ModRegistry"
 
-const MODULE_NAME = "WaywardModLearnings"
-
 export default class WaywardModLearnings extends Mod {
   // ---------------------
   // Wayward hooks always called (begin)
-  public onInitialize () {
+  onInitialize () {
   }
 
-  public onUninitialize () {
+  onUninitialize () {
   }
 
-  public onLoad () {
+  onLoad () {
     // this.getLog().info("Hello World!");
   }
 
-  public onUnload () {
+  onUnload () {
     // this.getLog().info("Goodbye World!");
   }
 
-  public onSave () {
+  onSave () {
 
   }
   // Wayward hooks (end)
   // ---------------------
 
-  @Register.message(MODULE_NAME)
+  @Register.message("Greetings")
   messageGreetings: Message;
 
   @Override @HookMethod
-  public onGameScreenVisible (): void {
+  onGameScreenVisible (): void {
     localPlayer.messages.type(MessageType.None).send(this.messageGreetings)
   }
 }
