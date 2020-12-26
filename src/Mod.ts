@@ -1,13 +1,8 @@
 import {MessageType} from "entity/player/IMessageManager"
-import {Dictionary} from "language/Dictionaries"
-import Translation from "language/Translation"
+import Message from "language/dictionary/Message"
 import {HookMethod} from "mod/IHookHost"
 import Mod from "mod/Mod"
 import Register from "mod/ModRegistry"
-
-export enum TranslationStringKeys {
-  "Greetings, welcome to the Wayward Mod Learnings! Don't use this with a saved game you care about."
-}
 
 export default class WaywardModLearnings extends Mod {
 
@@ -15,38 +10,34 @@ export default class WaywardModLearnings extends Mod {
 
   // ---------------------
   // Wayward "always called without decoration" hooks (begin)
-  onInitialize () {
-  }
+  // onInitialize () {
+  // }
 
-  onUninitialize () {
-  }
+  // onUninitialize () {
+  // }
 
-  onLoad () {
-    // this.getLog().info("Hello World!");
-  }
+  // The logs will show when a module is loaded or not, and log messages we generate are prefixed with our mod name.
+  // onLoad () {
+  //   this.getLog().info(`${WaywardModLearnings.MOD_ID}`);
+  // }
 
-  onUnload () {
-    // this.getLog().info("Goodbye World!");
-  }
+  // onUnload () {
+  //   // this.getLog().info("Goodbye World!");
+  // }
 
-  onSave () {
-
-  }
+  // onSave () {
+  // }
   // Wayward hooks (end)
   // ---------------------
 
   @Mod.instance(WaywardModLearnings.MOD_ID)
-  public static readonly INSTANCE: WaywardModLearnings;
+  public static readonly INSTANCE: WaywardModLearnings
 
-  @Register.dictionary("Messages", TranslationStringKeys)
-  public readonly translations: Dictionary;
+	@Register.message("ModWarningToPlayer")
+	public readonly messageModWarningToPlayer: Message
 
   @Override @HookMethod
   onGameScreenVisible (): void {
-    localPlayer.messages.type(MessageType.None).send(_t("Greetings, welcome to the Wayward Mod Learnings! Don't use this with a saved game you care about."))
+    localPlayer.messages.type(MessageType.Bad).send(this.messageModWarningToPlayer)
   }
-}
-
-export const _t = (entry: keyof typeof TranslationStringKeys) => {
-  return new Translation(WaywardModLearnings.INSTANCE.translations, entry)
 }
