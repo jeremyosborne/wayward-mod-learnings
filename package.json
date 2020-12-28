@@ -6,6 +6,7 @@
   "main": "index.js",
   "private": true,
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.11.0",
     "@typescript-eslint/parser": "^4.11.0",
     "@wayward/types": "^2.9.6-beta",
     "eslint": "^7.16.0",
@@ -16,7 +17,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "deploy:dev": "npm run build && rsync -av --progress --exclude node_modules --exclude .git . ~/Library/Application\\ Support/Steam/steamapps/common/Wayward/mods/wayward-mod-learnings"
+    "deploy:dev": "npm run build && rsync -av --progress --exclude resources --exclude node_modules --exclude .git . ~/Library/Application\\ Support/Steam/steamapps/common/Wayward/mods/wayward-mod-learnings"
   },
   "license": "ISC"
 }
