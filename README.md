@@ -6,12 +6,16 @@ The theme for our mod is `charcuterie`.
 
 ## What this mod does
 
-- Removes the following recipes as they conflict with our theme. Any items premade before this mod is loaded will remain, they just won't be craftable.
-    - Pemmican
-    - Cooked Pemmican
+- Modify existing content
+    - Removes the following recipes as they conflict with our theme. Any items premade before this mod is loaded will remain, they just won't be craftable. Commented with `// -- Recipes to Remove` in code.
+        - Pemmican
+        - Cooked Pemmican
 
 ## TODO
 
+- [ ] Make bundle of twigs and leaves. Quality of life improvement for the established player. Each bundle will bump the fire level up by one (embers -> almost extinguished -> struggling... etc).
+    - [ ] Purpose to bump up fire level, which seem to be separated by a value of 150.
+    - [ ] Demonstrate `onUse` with definition for stokeFire, see https://waywardgame.github.io/interfaces/iitemdescription.html#onuse
 - [ ] Make smoker doodad
 
 ## Dev Notes
