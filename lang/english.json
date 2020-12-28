@@ -1,6 +1,12 @@
 {
   "extends": "English",
   "dictionaries": {
+    "item": {
+      "modWaywardModLearningsTwigBundle": [
+        "twig bundle",
+        "A bunch of twigs portioned out as an efficient log replacement for fire stoking."
+      ]
+    },
     "message": {
       "modWaywardModLearningsModWarningToPlayer": "Greetings, the Wayward Mod Learnings is active. Don't use this with a saved game you care about!"
     }

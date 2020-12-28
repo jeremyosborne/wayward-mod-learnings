@@ -3,11 +3,10 @@
   "author": "Jeremy Osborne <jeremywosborne@gmail.com>",
   "description": "Where I learn to make a wayward mod.",
   "file": "out/Mod",
-  "languages": [
-    "lang/english"
-  ],
+  "languages": ["lang/english"],
   "multiplayer": "compatible",
   "name": "Wayward Mod Learnings",
+  "tags": ["Item"],
   "unloadable": true,
   "version": "0.0.1",
   "waywardVersion": "2.9.6-beta"
