@@ -12,7 +12,7 @@ import Message from "language/dictionary/Message"
 import { HookMethod } from "mod/IHookHost"
 import Mod from "mod/Mod"
 import Register from "mod/ModRegistry"
-// import * as rubberDuck from "./rubber-duck"
+import * as rubberDuck from "./rubber-duck"
 
 export default class WaywardModLearnings extends Mod {
   static MOD_ID = "WayardModLearnings"
@@ -55,6 +55,7 @@ export default class WaywardModLearnings extends Mod {
       reputation: 0,
       skill: SkillType.Camping,
     },
+    use: [ActionType.StokeFire],
     // 6 * twig weight, cordage considered neglibaile
     weight: 6 * 0.1,
     // 6 * twig worth plus labor
@@ -74,14 +75,14 @@ export default class WaywardModLearnings extends Mod {
   onInitialize(): void {
     // -- Add new recipe: twig bundle
     // Some debug code I used to inspect loaded structures.
-    // rubberDuck.itemTypeGroup.summarize("Kindling")
-    // rubberDuck.itemTypeGroup.details("Kindling")
-    // const stokeFireValue =
-    //   itemDescriptions[ItemType.Twigs].onUse?.[ActionType.StokeFire]
-    // this.getLog().debug(
-    //   "\n\nDEBUG: Stoke fire value for twigs is:",
-    //   stokeFireValue
-    // )
+    rubberDuck.itemTypeGroup.summarize("Kindling")
+    rubberDuck.itemTypeGroup.details("Kindling")
+    const stokeFireValue =
+      itemDescriptions[ItemType.Twigs].onUse?.[ActionType.StokeFire]
+    this.getLog().debug(
+      "\n\nDEBUG: Stoke fire value for twigs is:",
+      stokeFireValue
+    )
 
     // -- Recipes to Remove
     // Depending on what other mods are running, we can't guarantee that something else didn't
