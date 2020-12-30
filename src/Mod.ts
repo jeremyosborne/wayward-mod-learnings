@@ -4,7 +4,7 @@ import { MessageType } from "entity/player/IMessageManager"
 import Player from "entity/player/Player"
 import { QuestType } from "entity/player/quest/quest/IQuest"
 import { Quest } from "entity/player/quest/quest/Quest"
-// import { QuestRequirementType } from "entity/player/quest/requirement/IRequirement"
+import { QuestRequirementType } from "entity/player/quest/requirement/IRequirement"
 // import { QuestRequirement } from "entity/player/quest/requirement/Requirement"
 import { GameMode } from "game/options/IGameOptions"
 import {
@@ -176,15 +176,43 @@ export default class WaywardModLearnings extends Mod {
     "TutorialStart",
     new Quest()
       .setNeedsManualCompletion()
-      .addChildQuests(Registry<WaywardModLearnings>().get("questTutorialDone"))
+      .addChildQuests(
+        Registry<WaywardModLearnings>().get("questTutorialShreddedMeatDried")
+      )
   )
   public questTutorialStart: QuestType
 
   @Register.quest(
-    "TutorialEnd",
-    new Quest().setNeedsManualCompletion()
-    // .addChildQuests(Registry<WaywardModLearnings>().get("questGearUp"))
+    "TutorialShreddedMeatDried",
+    new Quest()
+      .addRequirement(QuestRequirementType.CollectItem, [ItemType.Pemmican], 2)
+      .addChildQuests(
+        Registry<WaywardModLearnings>().get("questTutorialShreddedMeatFried")
+      )
   )
+  public questTutorialShreddedMeatDried: QuestType
+
+  @Register.quest(
+    "TutorialShreddedMeatFried",
+    new Quest()
+      .addRequirement(
+        QuestRequirementType.CollectItem,
+        [ItemType.CookedPemmican],
+        1
+      )
+      .addChildQuests(Registry<WaywardModLearnings>().get("questTutorialDone"))
+  )
+  public questTutorialShreddedMeatFried: QuestType
+
+  // TODO: add `shredded meat, boiled` crafting quest (when the boiled shredded meat has been created)
+  // TODO: add translations for `shredded meat, boiled` quest
+
+  // TODO: add `twig bundle` crafting quest
+  // TODO: add translations for `shredded meat, boiled` quest
+
+  // TODO: chain the quests correctly
+
+  @Register.quest("TutorialEnd", new Quest().setNeedsManualCompletion())
   public questTutorialDone: QuestType
 
   @Override

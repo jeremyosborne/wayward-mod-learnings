@@ -17,9 +17,10 @@ Despite being educational, we will be testing out real content changes in this m
 
 ## TODO
 
-- [ ] `Shredded Meat, Boiled`: another meal option for `Shredded Meat, Dried`. Uses the much more plentiful water ingredient instead of the scarcer fat. Increases satiation and even adds some thirst quenching, but not as nutritious as `Shredded Meat, Fried`. onUse: [1, 15, 4, 2]
+- [ ] `Shredded Meat, Boiled`: another meal option for `Shredded Meat, Dried`. Uses the much more plentiful water ingredient instead of the scarcer fat. Increases satiation and even adds some thirst quenching, but not as nutritious as `Shredded Meat, Fried`. onUse: [1, 15, 5, 3]
 - [ ] Make smoker doodad
 - [ ] Quest: Tutorial for what is included in this mod
+    - [ ] Document the quest in code, only when it is complete
 
 ## Dev Notes
 

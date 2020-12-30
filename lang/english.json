@@ -23,6 +23,17 @@
         "Wayward Mod Learnings Tutorial",
         "{#--color-brown:This //tutorial// will walk you through what is included in this sample mod.}\n\nPress {Bindings:DialogQuests} to toggle this dialog.\n\nClick \"//Complete Quest//\" to start the tutorial."
       ],
+
+      "modWaywardModLearningsTutorialShreddedMeatDried": [
+        "//Pemmican// is now //Shredded meat, dried//",
+        "Along with the name change, the stat modifications from eating the this food have changed. When consumed as is, it acts more like a snack or an energy bar. It also forms the basis for two meals."
+      ],
+
+      "modWaywardModLearningsTutorialShreddedMeatFried": [
+        "//Cooked pemmican// is now //Shredded meat, fried//",
+        "Along with the name change, the stat modifications from eating the this food have changed. Consuming this will provide greater benefit to one's character acting as a full meal, especially as fat is a scarcer resource."
+      ],
+
       "modWaywardModLearningsTutorialEnd": [
         "Tutorial Complete!",
         "That's everything included in this sample mod.\n\nPerhaps this will inspire you to create your own mod?"
