@@ -17,29 +17,24 @@ export const itemTypeGroup = {
   summarize: (itg: keyof typeof ItemTypeGroup): void => {
     const itemTypeGroupDescription = itemGroupDescriptions[ItemTypeGroup[itg]]
     logger.debug(
-      `\n\nItemTypeGroup summary for ${itg}:
-types: ${itemTypeGroupDescription.types
+      `ItemTypeGroup summary for ${itg}: types: ${itemTypeGroupDescription.types
         .map((typeEnum) => `${ItemType[typeEnum]} (type enum: ${typeEnum})`)
-        .join(", ")}
-default: ${ItemType[itemTypeGroupDescription.default]} (type enum: ${
-        itemTypeGroupDescription.default
-      })\n`
+        .join(", ")} default: ${
+        ItemType[itemTypeGroupDescription.default]
+      } (type enum: ${itemTypeGroupDescription.default})`
     )
   },
 
   details: (itg: keyof typeof ItemTypeGroup): void => {
     const itemTypeGroupDescription = itemGroupDescriptions[ItemTypeGroup[itg]]
     logger.debug(
-      `\n\nItemTypeGroup details for ${itg}:
-${itemTypeGroupDescription.types
-  .map((typeEnum) => {
-    return `${ItemType[typeEnum]}: ${JSON.stringify(
-      itemDescriptions[typeEnum],
-      null,
-      4
-    )}`
-  })
-  .join("\n")}\n`
+      `ItemTypeGroup details for ${itg}: ${itemTypeGroupDescription.types
+        .map((typeEnum) => {
+          return `${ItemType[typeEnum]}: ${JSON.stringify(
+            itemDescriptions[typeEnum]
+          )}`
+        })
+        .join("; ")}`
     )
   },
 }

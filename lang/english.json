@@ -5,10 +5,28 @@
       "modWaywardModLearningsTwigBundle": [
         "twig bundle",
         "A bunch of twigs portioned out as an efficient log replacement for fire stoking."
+      ],
+      "pemmican": [
+        "shredded meat, dried",
+        "A cake of dehydrated meat. It will never spoil and is a good travel snack. Prepare with other ingrediants for a more nutritious meal."
+      ],
+      "cookedPemmican": [
+        "shredded meat, fried",
+        "Fried meat cake. A filling and nutritious meal."
       ]
     },
     "message": {
       "modWaywardModLearningsModWarningToPlayer": "Greetings, the Wayward Mod Learnings is active. Don't use this with a saved game you care about!"
+    },
+    "quest": {
+      "modWaywardModLearningsTutorialStart": [
+        "Wayward Mod Learnings Tutorial",
+        "{#--color-brown:This //tutorial// will walk you through what is included in this sample mod.}\n\nPress {Bindings:DialogQuests} to toggle this dialog.\n\nClick \"//Complete Quest//\" to start the tutorial."
+      ],
+      "modWaywardModLearningsTutorialEnd": [
+        "Tutorial Complete!",
+        "That's everything included in this sample mod.\n\nPerhaps this will inspire you to create your own mod?"
+      ]
     }
   }
 }

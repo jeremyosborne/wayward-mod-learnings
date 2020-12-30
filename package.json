@@ -19,5 +19,8 @@
     "build": "tsc",
     "deploy:dev": "npm run build && rsync -av --progress --exclude resources --exclude node_modules --exclude .git . ~/Library/Application\\ Support/Steam/steamapps/common/Wayward/mods/wayward-mod-learnings"
   },
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "lodash": "^4.17.20"
+  }
 }

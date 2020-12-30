@@ -1,6 +1,12 @@
 import { ActionType } from "entity/action/IAction"
 import { SkillType } from "entity/IHuman"
 import { MessageType } from "entity/player/IMessageManager"
+import Player from "entity/player/Player"
+import { QuestType } from "entity/player/quest/quest/IQuest"
+import { Quest } from "entity/player/quest/quest/Quest"
+// import { QuestRequirementType } from "entity/player/quest/requirement/IRequirement"
+// import { QuestRequirement } from "entity/player/quest/requirement/Requirement"
+import { GameMode } from "game/options/IGameOptions"
 import {
   IItemDescription,
   ItemType,
@@ -11,7 +17,7 @@ import { itemDescriptions, RecipeComponent } from "item/Items"
 import Message from "language/dictionary/Message"
 import { HookMethod } from "mod/IHookHost"
 import Mod from "mod/Mod"
-import Register from "mod/ModRegistry"
+import Register, { Registry } from "mod/ModRegistry"
 import * as rubberDuck from "./rubber-duck"
 
 export default class WaywardModLearnings extends Mod {
@@ -20,7 +26,7 @@ export default class WaywardModLearnings extends Mod {
   @Mod.instance<WaywardModLearnings>(WaywardModLearnings.MOD_ID)
   public static readonly INSTANCE: WaywardModLearnings
 
-  // -- Add new recipe: twig bundle
+  // -- Content: add new: twig bundle
   // Something like this, based off of existing items, could be dynamically created, but we
   // hard code everything for now ;)
   //
@@ -63,68 +69,91 @@ export default class WaywardModLearnings extends Mod {
   })
   public itemTwigBundle: ItemType
 
-  // -- Recipes to Remove
-  recipesToRemoveFromTheseItemTypes: ItemType[] = [
-    ItemType.Pemmican,
-    ItemType.CookedPemmican,
-  ]
-  // Hold a reference to the recipe objects we remove.
-  recipesRemoved: Record<string, IItemDescription["recipe"]> = {}
+  // -- Content: modify existing
+  // Item description modifications that will be shallow merged into existing item descriptions.
+  //
+  // The visual names for `Pemmican` and `CookedPemmican` are changed in the
+  // `lang/english.json` file, at the keys:
+  // - `dictionaries.item.pemmican`
+  // - `dictionaries.item.cookedPemmican`
+  itemDescriptionsToModify: Record<string, IItemDescription> = {
+    [ItemType.Pemmican]: {
+      onUse: {
+        [ActionType.Eat]: [1, 10, 2, -1], // modified from: [1, 4, 4, -3]
+      },
+    },
+    [ItemType.CookedPemmican]: {
+      onUse: {
+        [ActionType.Eat]: [1, 24, 12, 0], // modified from: [2, 12, 6, -1]
+      },
+    },
+  }
+  // Hold a reference to the objects we modified to undo our work.
+  itemDescriptionsToModifyOriginalsCache: Record<string, IItemDescription> = {}
 
   @Override
   onInitialize(): void {
-    // -- Add new recipe: twig bundle
+    // -- Content: add new: twig bundle
     // Some debug code I used to inspect loaded structures.
     rubberDuck.itemTypeGroup.summarize("Kindling")
     rubberDuck.itemTypeGroup.details("Kindling")
     const stokeFireValue =
+      // There are many globals available in this game, discoverable at `https://waywardgame.github.io/globals.html`
       itemDescriptions[ItemType.Twigs].onUse?.[ActionType.StokeFire]
+    // Log messages are automagically prefixed with our mod name and the function works similar to `console.log`.
     this.getLog().debug(
       "\n\nDEBUG: Stoke fire value for twigs is:",
       stokeFireValue
     )
 
-    // -- Recipes to Remove
+    // -- Content: modify existing
     // Depending on what other mods are running, we can't guarantee that something else didn't
-    // modify the recipes or the itemDescriptions before we get here.
-    this.recipesToRemoveFromTheseItemTypes.forEach((itemType) => {
-      // There are many globals available in this game, discoverable at `https://waywardgame.github.io/globals.html`
+    // modify the itemDescriptions before we get here, so we take precautions.
+    for (const [itemTypeKey, itemDescriptionUpdate] of Object.entries(
+      this.itemDescriptionsToModify
+    )) {
+      const itemType = (itemTypeKey as unknown) as ActionType
+      const itemTypeName = `${ItemType[itemType] || itemType}`
       const itemDescription = itemDescriptions[itemType]
-      if (itemDescription?.recipe) {
-        // Log messages are automagically prefixed with our mod name and the function works similar to `console.log`.
-        this.getLog().debug(
-          `Removing recipe from ${ItemType[itemType] || itemType}`
-        )
-        this.recipesRemoved[itemType] = itemDescription.recipe
-        delete itemDescription.recipe
+      this.getLog().debug(
+        `modifying ${itemTypeName} itemDescription:`,
+        JSON.stringify(itemDescription),
+        "with:",
+        JSON.stringify(itemDescriptionUpdate)
+      )
+      if (itemDescription) {
+        this.itemDescriptionsToModifyOriginalsCache[itemType] = itemDescription
+        // Assume nothing is holding a reference directly to our itemDescription
+        // other than the index of itemDescriptions.
+        itemDescriptions[itemType] = {
+          ...itemDescription,
+          ...itemDescriptionUpdate,
+        }
       }
-    })
+    }
   }
 
   @Override
   onUninitialize(): void {
-    // -- Recipes to Remove
-    // Restore the recipes when the game is unloaded. This might not be necessary, but better
+    // -- Content: modify existing
+    // Restore the original item descriptions. This might not be necessary, but better
     // to clean up after ourselves and not worry about it.
-    this.recipesToRemoveFromTheseItemTypes.forEach((itemType) => {
-      const recipe = this.recipesRemoved[itemType]
-      if (recipe) {
-        const itemDescription = itemDescriptions[itemType]
-        if (itemDescription) {
-          if (itemDescription?.recipe) {
-            this.getLog().warn(
-              `${
-                ItemType[itemType] || itemType
-              } has a recipe that will be replaced with our cached version.`
-            )
-          }
-          this.getLog().debug(
-            `Adding recipe back to ${ItemType[itemType] || itemType}`
-          )
-          itemDescription.recipe = recipe
-        }
+    for (const [itemTypeKey, itemDescriptionOriginal] of Object.entries(
+      this.itemDescriptionsToModifyOriginalsCache
+    )) {
+      const itemType = (itemTypeKey as unknown) as ActionType
+      const itemDescription = itemDescriptions[itemType]
+      this.getLog().debug(
+        `restoring ${ItemType[itemType] || itemType} itemDescription:`,
+        JSON.stringify(itemDescription),
+        "to:",
+        JSON.stringify(itemDescriptionOriginal)
+      )
+      if (itemDescription && itemDescriptionOriginal) {
+        this.itemDescriptionsToModifyOriginalsCache[itemType] = itemDescription
+        itemDescriptions[itemType] = itemDescriptionOriginal
       }
-    })
+    }
   }
 
   // -- Send message to player
@@ -141,5 +170,49 @@ export default class WaywardModLearnings extends Mod {
     localPlayer.messages
       .type(MessageType.Bad)
       .send(this.messageModWarningToPlayer)
+  }
+
+  @Register.quest(
+    "TutorialStart",
+    new Quest()
+      .setNeedsManualCompletion()
+      .addChildQuests(Registry<WaywardModLearnings>().get("questTutorialDone"))
+  )
+  public questTutorialStart: QuestType
+
+  @Register.quest(
+    "TutorialEnd",
+    new Quest().setNeedsManualCompletion()
+    // .addChildQuests(Registry<WaywardModLearnings>().get("questGearUp"))
+  )
+  public questTutorialDone: QuestType
+
+  @Override
+  @HookMethod
+  public onPlayerJoin(player: Player): void {
+    // Needed to apply quest to players in multiplayer.
+    this.addQuestTutorial(player)
+  }
+
+  @Override
+  @HookMethod
+  public onGameStart(isLoadingSave: boolean, playedCount: number): void {
+    if (!multiplayer.isConnected() || !multiplayer.isClient()) {
+      // Needed to apply quest to single player.
+      this.addQuestTutorial()
+    }
+  }
+
+  private addQuestTutorial(player: Player = localPlayer) {
+    if (
+      game.getGameMode() !== GameMode.Challenge &&
+      player.quests
+        .getQuests()
+        .every((quest) => quest.data.type !== this.questTutorialStart)
+    ) {
+      // DEBUG: useful while testing a quest and making changes. Will nuke all quests. Don't use on a character you care about.
+      player.quests.reset() // !!! DON'T LEAVE THIS ON IN LIVE CODE !!!
+      player.quests.add(this.questTutorialStart)
+    }
   }
 }
