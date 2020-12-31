@@ -163,8 +163,8 @@ export default class WaywardModLearnings extends Mod {
   @Register.message("ModWarningToPlayer")
   public readonly messageModWarningToPlayer: Message
 
-  @Override
   @HookMethod
+  @Override
   onGameScreenVisible(): void {
     // -- Send message to player
     localPlayer.messages
@@ -215,15 +215,15 @@ export default class WaywardModLearnings extends Mod {
   @Register.quest("TutorialEnd", new Quest().setNeedsManualCompletion())
   public questTutorialDone: QuestType
 
-  @Override
   @HookMethod
+  @Override
   public onPlayerJoin(player: Player): void {
     // Needed to apply quest to players in multiplayer.
     this.addQuestTutorial(player)
   }
 
-  @Override
   @HookMethod
+  @Override
   public onGameStart(isLoadingSave: boolean, playedCount: number): void {
     if (!multiplayer.isConnected() || !multiplayer.isClient()) {
       // Needed to apply quest to single player.
@@ -232,14 +232,15 @@ export default class WaywardModLearnings extends Mod {
   }
 
   private addQuestTutorial(player: Player = localPlayer) {
+    // DEBUG: docs say `Removes all quests & disposes of any quest requirement trigger`, but I don't see an easier
+    // way to remove and restart our quest for testing.
+    player.quests.reset()
     if (
       game.getGameMode() !== GameMode.Challenge &&
       player.quests
         .getQuests()
         .every((quest) => quest.data.type !== this.questTutorialStart)
     ) {
-      // DEBUG: useful while testing a quest and making changes. Will nuke all quests. Don't use on a character you care about.
-      player.quests.reset() // !!! DON'T LEAVE THIS ON IN LIVE CODE !!!
       player.quests.add(this.questTutorialStart)
     }
   }
