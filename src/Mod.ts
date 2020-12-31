@@ -1,3 +1,4 @@
+import { DoodadType, DoodadTypeGroup } from "doodad/IDoodad"
 import { ActionType } from "entity/action/IAction"
 import { SkillType } from "entity/IHuman"
 import { MessageType } from "entity/player/IMessageManager"
@@ -5,7 +6,6 @@ import Player from "entity/player/Player"
 import { QuestType } from "entity/player/quest/quest/IQuest"
 import { Quest } from "entity/player/quest/quest/Quest"
 import { QuestRequirementType } from "entity/player/quest/requirement/IRequirement"
-// import { QuestRequirement } from "entity/player/quest/requirement/Requirement"
 import { GameMode } from "game/options/IGameOptions"
 import {
   IItemDescription,
@@ -96,6 +96,71 @@ export default class WaywardModLearnings extends Mod {
     worth: 25,
   })
   public itemShreddedMeatBoiled: ItemType
+
+  // -- Content: add new: smoker
+  // Translations are keyed via the pseudo code template `mod${modName.removeSpaces().startCase()${item id}}`.
+  // Here the translation key would be `modWaywardModLearningsSmoker` and an English translation
+  // would be defined in the file `lang/english.json` at the key `dictionaries.item.modWaywardModLearningsSmoker`.
+  //
+  // Item images must be provided and named `${item id.lowerCase()}.png` for the 16x16 pixel inventory image, and
+  // `${item id.lowerCase()}_8.png` for the 8x8 item-on-the-ground image. Item images are stored in
+  // `static/image/item` and our images for this item are named `smoker.png` and `smoker_8.png`.
+  //
+  // This particular item can be `built` into a structure, defined as a `doodad` below.
+  @Register.item("Smoker", {
+    use: [ActionType.Build],
+    recipe: {
+      components: [
+        RecipeComponent(ItemTypeGroup.Rock, 8, 8, 7),
+        RecipeComponent(ItemType.Log, 2, 2, 0),
+        RecipeComponent(ItemType.Charcoal, 2, 2, 0),
+      ],
+      skill: SkillType.Camping,
+      level: RecipeLevel.Advanced,
+      reputation: -25,
+    },
+    disassemble: true,
+    durability: 25,
+    onUse: { [ActionType.Build]: DoodadType.StoneKiln },
+    worth: 60,
+  })
+  public itemSmoker: ItemType
+
+  // -- Content: add new: smoker
+  // Doodads define buildable structures. Translation and images follow the same convention as items, except
+  // with `doodad` in the overall namespace.
+  @Register.doodad("Smoker", {
+    pickUp: [Registry<WaywardModLearnings>().get("itemSmoker")],
+    blockMove: true,
+    canBreak: true,
+    lit: Registry<WaywardModLearnings>().get("doodadLitSmoker"),
+    repairItem: Registry<WaywardModLearnings>().get("itemSmoker"),
+    particles: { r: 130, g: 128, b: 128 },
+    reduceDurabilityOnGather: true,
+    isTall: true,
+  })
+  public doodadSmoker: DoodadType
+
+  // -- Content: add new: smoker
+  // Since the smoker doodad and be lit, we need to provide a lit version of the doodad along with an
+  // image with the various stages of fire intensity.
+  @Register.doodad("LitSmoker", {
+    decayMax: 250,
+    providesFire: true,
+    providesLight: 1,
+    blockMove: true,
+    canBreak: true,
+    revert: Registry<WaywardModLearnings>().get("doodadSmoker"),
+    isAnimated: true,
+    repairItem: Registry<WaywardModLearnings>().get("itemSmoker"),
+    particles: { r: 130, g: 128, b: 128 },
+    group: [DoodadTypeGroup.FireSource, DoodadTypeGroup.LitStructure],
+    tier: {
+      [DoodadTypeGroup.FireSource]: 2,
+    },
+    isTall: true,
+  })
+  public doodadLitSmoker: DoodadType
 
   // -- Content: modify existing
   // Item description modifications that will be shallow merged into existing item descriptions.
@@ -200,13 +265,15 @@ export default class WaywardModLearnings extends Mod {
       .send(this.messageModWarningToPlayer)
   }
 
+  // -- Content: tutorial quest
+  // Each node of the overall quest is defined as a quest type, and then linked to the
+  // next stage of the quest.
   @Register.quest(
     "TutorialStart",
-    new Quest()
-      .setNeedsManualCompletion()
-      .addChildQuests(
-        Registry<WaywardModLearnings>().get("questTutorialShreddedMeatDried")
-      )
+    new Quest().setNeedsManualCompletion().addChildQuests(
+      // Conventional way to retrieve a reference to something on our own mod.
+      Registry<WaywardModLearnings>().get("questTutorialShreddedMeatDried")
+    )
   )
   public questTutorialStart: QuestType
 
@@ -252,11 +319,23 @@ export default class WaywardModLearnings extends Mod {
         [Registry<WaywardModLearnings>().get("itemTwigBundle")],
         1
       )
-      .addChildQuests(Registry<WaywardModLearnings>().get("questTutorialEnd"))
+      .addChildQuests(
+        Registry<WaywardModLearnings>().get("questTutorialSmoker")
+      )
   )
   public questTutorialTwigBundle: QuestType
 
-  // TODO: chain the quests correctly
+  @Register.quest(
+    "TutorialSmoker",
+    new Quest()
+      .addRequirement(
+        QuestRequirementType.Craft,
+        [Registry<WaywardModLearnings>().get("itemSmoker")],
+        1
+      )
+      .addChildQuests(Registry<WaywardModLearnings>().get("questTutorialEnd"))
+  )
+  public questTutorialSmoker: QuestType
 
   @Register.quest("TutorialEnd", new Quest().setNeedsManualCompletion())
   public questTutorialEnd: QuestType
@@ -264,6 +343,7 @@ export default class WaywardModLearnings extends Mod {
   @HookMethod
   @Override
   public onPlayerJoin(player: Player): void {
+    // -- Content: tutorial quest
     // Needed to apply quest to players in multiplayer.
     this.addQuestTutorial(player)
   }
@@ -272,15 +352,17 @@ export default class WaywardModLearnings extends Mod {
   @Override
   public onGameStart(isLoadingSave: boolean, playedCount: number): void {
     if (!multiplayer.isConnected() || !multiplayer.isClient()) {
-      // Needed to apply quest to single player.
+      // -- Content: tutorial quest
+      // Needed to apply quest to player in a single player game.
       this.addQuestTutorial()
     }
   }
 
   private addQuestTutorial(player: Player = localPlayer) {
+    // -- Content: tutorial quest
     // DEBUG: docs say `Removes all quests & disposes of any quest requirement trigger`, but I don't see an easier
     // way to remove and restart our quest for testing.
-    player.quests.reset()
+    // player.quests.reset()
     if (
       game.getGameMode() !== GameMode.Challenge &&
       player.quests

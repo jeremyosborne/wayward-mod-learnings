@@ -16,12 +16,10 @@ Despite being educational, we will be testing out real content changes in this m
         - Another meal option for `Shredded Meat, Dried`. Uses the much more plentiful water ingredient instead of the scarcer fat. Increases satiation and even adds some thirst quenching, but not as nutritious as `Shredded Meat, Fried`.
     - `Twig Bundle`, commented with `// -- Content: add new: twig bundle`
         - Quality of life improvement for the established player. For when you would rather keep your stone stills around and use them with less mouse clicks. 1 twig bundle should be enough to purify one batch of water and is a way to put those piles of excess twigs to use.
-
-## TODO
-
-- [ ] Make smoker doodad
-- [ ] Quest: Tutorial for what is included in this mod
-    - [ ] Document the quest code
+    - `Smoker`, commented with `// -- Content: add new: smoker`
+        - Item and doodad intended to be used to preserve excess food. A later game item for established bases.
+    - `Tutorial`, commented with `// -- Content: tutorial quest`
+        - A simple tutorial introducing all of the items added in this mod.
 
 ## Dev Notes
 
