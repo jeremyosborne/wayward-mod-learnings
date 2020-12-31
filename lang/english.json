@@ -2,17 +2,21 @@
   "extends": "English",
   "dictionaries": {
     "item": {
+      "cookedPemmican": [
+        "shredded meat, fried",
+        "Fried meat cake. A filling and nutritious meal."
+      ],
       "modWaywardModLearningsTwigBundle": [
         "twig bundle",
         "A bunch of twigs portioned out as an efficient log replacement for fire stoking."
       ],
+      "modWaywardModLearningsShreddedMeatBoiled": [
+        "shredded meat, boiled",
+        "Boiled meat cake. A comforting, if soggy and bland meal."
+      ],
       "pemmican": [
         "shredded meat, dried",
         "A cake of dehydrated meat. It will never spoil and is a good travel snack. Prepare with other ingrediants for a more nutritious meal."
-      ],
-      "cookedPemmican": [
-        "shredded meat, fried",
-        "Fried meat cake. A filling and nutritious meal."
       ]
     },
     "message": {
@@ -32,6 +36,16 @@
       "modWaywardModLearningsTutorialShreddedMeatFried": [
         "//Cooked pemmican// is now //Shredded meat, fried//",
         "Along with the name change, the stat modifications from eating this food have changed. Consuming this will provide greater benefit to one's stats."
+      ],
+
+      "modWaywardModLearningsTutorialShreddedMeatBoiled": [
+        "New item: //Shredded meat, boiled//",
+        "An alternate, and simpler use for your piles of shredded meat, dried. Just add water and rehydrate."
+      ],
+
+      "modWaywardModLearningsTutorialTwigBundle": [
+        "New item: //Twig bundle//",
+        "Cordage plus a pile of twigs you probably have lying around equals a makeshift log guaranteed stoke a stone still flame to the right level to purify water."
       ],
 
       "modWaywardModLearningsTutorialEnd": [

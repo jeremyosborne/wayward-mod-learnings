@@ -12,15 +12,16 @@ Despite being educational, we will be testing out real content changes in this m
         - `Shredded Meat, Dried` (nee: `Pemmican`): the advantage of making tainted meat edible is a pretty big upside, not to mention it being a food that never decays. Changed the theme of this to be an energy snack vs. a full meal when eaten without additional prep.
         - `Shredded Meat, Fried` (nee: `Cooked Pemmican`): fat would be very precious in a survival situation, and provide much needed nutrition. Made a real meal for anyone wishing to use their fat to fry up some dried meat.
 - Content: add new
+    - `Shredded Meat, Boiled`, commented with `// -- Content: add new: shredded meat, boiled`
+        - Another meal option for `Shredded Meat, Dried`. Uses the much more plentiful water ingredient instead of the scarcer fat. Increases satiation and even adds some thirst quenching, but not as nutritious as `Shredded Meat, Fried`.
     - `Twig Bundle`, commented with `// -- Content: add new: twig bundle`
         - Quality of life improvement for the established player. For when you would rather keep your stone stills around and use them with less mouse clicks. 1 twig bundle should be enough to purify one batch of water and is a way to put those piles of excess twigs to use.
 
 ## TODO
 
-- [ ] `Shredded Meat, Boiled`: another meal option for `Shredded Meat, Dried`. Uses the much more plentiful water ingredient instead of the scarcer fat. Increases satiation and even adds some thirst quenching, but not as nutritious as `Shredded Meat, Fried`. onUse: [1, 15, 5, 3]
 - [ ] Make smoker doodad
 - [ ] Quest: Tutorial for what is included in this mod
-    - [ ] Document the quest in code, only when it is complete
+    - [ ] Document the quest code
 
 ## Dev Notes
 

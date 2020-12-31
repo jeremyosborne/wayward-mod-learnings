@@ -27,9 +27,6 @@ export default class WaywardModLearnings extends Mod {
   public static readonly INSTANCE: WaywardModLearnings
 
   // -- Content: add new: twig bundle
-  // Something like this, based off of existing items, could be dynamically created, but we
-  // hard code everything for now ;)
-  //
   // Translations are keyed via the pseudo code template `mod${modName.removeSpaces().startCase()${item id}}`.
   // Here the translation key would be `modWaywardModLearningsTwigBundle` and an English translation
   // would be defined in the file `lang/english.json` at the key `dictionaries.item.modWaywardModLearningsTwigBundle`.
@@ -68,6 +65,37 @@ export default class WaywardModLearnings extends Mod {
     worth: 6 * 5 + 5,
   })
   public itemTwigBundle: ItemType
+
+  // -- Content: add new: shredded meat, boiled
+  // Translations are keyed via the pseudo code template `mod${modName.removeSpaces().startCase()${item id}}`.
+  // Here the translation key would be `modWaywardModLearningsShreddedMeatBoiled` and an English translation
+  // would be defined in the file `lang/english.json` at the key `dictionaries.item.modWaywardModLearningsShreddedMeatBoiled`.
+  //
+  // Item images must be provided and named `${item id.lowerCase()}.png` for the 16x16 pixel inventory image, and
+  // `${item id.lowerCase()}_8.png` for the 8x8 item-on-the-ground image. Item images are stored in
+  // `static/image/item` and our images for this item are named `shreddedmeatboiled.png` and `shreddedmeatboiled_8.png`.
+  @Register.item("ShreddedMeatBoiled", {
+    // Based on cooked pemmican.
+    use: [ActionType.Eat],
+    decayMax: 5250,
+    decaysInto: [ItemType.RottenMeat],
+    recipe: {
+      components: [
+        RecipeComponent(ItemType.Pemmican, 1, 1),
+        RecipeComponent(ItemTypeGroup.Liquid, 1, 1, 0, !0),
+        RecipeComponent(ItemTypeGroup.CookingEquipment, 1, 0),
+      ],
+      skill: SkillType.Cooking,
+      level: RecipeLevel.Advanced,
+      requiresFire: true,
+      reputation: 25,
+    },
+    onBurn: [ItemType.PileOfAsh],
+    onUse: { [ActionType.Eat]: [1, 15, 5, 3] },
+    skillUse: SkillType.Cooking,
+    worth: 25,
+  })
+  public itemShreddedMeatBoiled: ItemType
 
   // -- Content: modify existing
   // Item description modifications that will be shallow merged into existing item descriptions.
@@ -185,7 +213,7 @@ export default class WaywardModLearnings extends Mod {
   @Register.quest(
     "TutorialShreddedMeatDried",
     new Quest()
-      .addRequirement(QuestRequirementType.CollectItem, [ItemType.Pemmican], 2)
+      .addRequirement(QuestRequirementType.Craft, [ItemType.Pemmican], 1)
       .addChildQuests(
         Registry<WaywardModLearnings>().get("questTutorialShreddedMeatFried")
       )
@@ -195,25 +223,43 @@ export default class WaywardModLearnings extends Mod {
   @Register.quest(
     "TutorialShreddedMeatFried",
     new Quest()
-      .addRequirement(
-        QuestRequirementType.CollectItem,
-        [ItemType.CookedPemmican],
-        1
+      .addRequirement(QuestRequirementType.Craft, [ItemType.CookedPemmican], 1)
+      .addChildQuests(
+        Registry<WaywardModLearnings>().get("questTutorialShreddedMeatBoiled")
       )
-      .addChildQuests(Registry<WaywardModLearnings>().get("questTutorialDone"))
   )
   public questTutorialShreddedMeatFried: QuestType
 
-  // TODO: add `shredded meat, boiled` crafting quest (when the boiled shredded meat has been created)
-  // TODO: add translations for `shredded meat, boiled` quest
+  @Register.quest(
+    "TutorialShreddedMeatBoiled",
+    new Quest()
+      .addRequirement(
+        QuestRequirementType.Craft,
+        [Registry<WaywardModLearnings>().get("itemShreddedMeatBoiled")],
+        1
+      )
+      .addChildQuests(
+        Registry<WaywardModLearnings>().get("questTutorialTwigBundle")
+      )
+  )
+  public questTutorialShreddedMeatBoiled: QuestType
 
-  // TODO: add `twig bundle` crafting quest
-  // TODO: add translations for `shredded meat, boiled` quest
+  @Register.quest(
+    "TutorialTwigBundle",
+    new Quest()
+      .addRequirement(
+        QuestRequirementType.Craft,
+        [Registry<WaywardModLearnings>().get("itemTwigBundle")],
+        1
+      )
+      .addChildQuests(Registry<WaywardModLearnings>().get("questTutorialEnd"))
+  )
+  public questTutorialTwigBundle: QuestType
 
   // TODO: chain the quests correctly
 
   @Register.quest("TutorialEnd", new Quest().setNeedsManualCompletion())
-  public questTutorialDone: QuestType
+  public questTutorialEnd: QuestType
 
   @HookMethod
   @Override
