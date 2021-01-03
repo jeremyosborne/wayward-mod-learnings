@@ -1,7 +1,7 @@
 {
   "name": "wayward-mod-learnings",
   "version": "0.0.1",
-  "description": "Wayward mod for the point of learning to mod wayward.",
+  "description": "See mod.json",
   "author": "Jeremy Osborne <jeremywosborne@gmail.com>",
   "private": true,
   "devDependencies": {
