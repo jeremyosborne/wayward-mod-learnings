@@ -24,6 +24,7 @@ Despite being educational, we will be testing out real content changes in this m
 ## Dev Notes
 
 - [Wayward mod API docs](https://waywardgame.github.io/index.html)
+- Run `npm run deploy:dev:on-change` for local development and testing of mod.
 - File locations
     - MacOS, Steam
         - App: `~/Library/Application\ Support/Steam/steamapps/common/Wayward/Wayward.app/Contents/MacOS/Electron`

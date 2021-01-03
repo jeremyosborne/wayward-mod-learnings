@@ -21,7 +21,7 @@
   "scripts": {
     "build": "tsc",
     "deploy:dev": "npm run build && ts-node --project .scripts/tsconfig.json .scripts/deploy-dev.ts",
-    "dev:watch": "nodemon --delay 5000ms --ext ts,json,png --watch src --watch static --watch lang --exec \"npm run\" deploy:dev`# Rebuild the mod and deploy locally as changes are made.`",
+    "deploy:dev:on-change": "nodemon --delay 5000ms --ext ts,json,png --watch src --watch static --watch lang --exec \"npm run\" deploy:dev `# Rebuild the mod and deploy locally for testing as changes are made.`",
     "resources:extract": "ts-node --project .scripts/tsconfig.json .scripts/resources-extract.ts"
   },
   "license": "ISC",
